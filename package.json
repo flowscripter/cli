@@ -1,0 +1,76 @@
+{
+    "name": "@flowscripter/cli",
+    "version": "0.0.0",
+    "description": "Flowscripter CLI.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/flowscripter/cli"
+    },
+    "homepage": "https://github.com/flowscripter/cli",
+    "bugs": {
+        "url": "https://github.com/flowscripter/cli/issues"
+    },
+    "keywords": [
+        "typescript"
+    ],
+    "contributors": [
+        {
+            "name": "Vectronic",
+            "email": "hello.vectronic@gmail.com",
+            "url": "https://vectronic.io"
+        }
+    ],
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "dist/node.js",
+    "type": "module",
+    "files": [
+        "dist/**/*"
+    ],
+    "types": "dist/types/index.d.ts",
+    "engines": {
+        "node": ">=12"
+    },
+    "scripts": {
+        "prebuild": "npx rimraf dist",
+        "build": "npx rollup -c",
+        "watch": "npx rollup -c --watch",
+        "test": "npx jest",
+        "lint": "npx eslint ./src/**/*.ts ./test/**/*.ts"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "8.2.0",
+        "@commitlint/config-conventional": "8.2.0",
+        "@flowscripter/eslint-config": "1.3.7",
+        "@flowscripter/renovate-config": "1.0.3",
+        "@flowscripter/tsconfig": "1.2.0",
+        "@types/debug": "4.1.5",
+        "@types/jest": "24.0.18",
+        "@typescript-eslint/eslint-plugin": "2.3.0",
+        "@typescript-eslint/parser": "2.3.0",
+        "eslint": "6.4.0",
+        "eslint-plugin-import": "2.18.2",
+        "eslint-plugin-jest": "22.17.0",
+        "gulp": "4.0.2",
+        "husky": "3.0.5",
+        "jest": "24.9.0",
+        "rimraf": "3.0.0",
+        "rollup": "1.21.4",
+        "rollup-plugin-cleanup": "3.1.1",
+        "rollup-plugin-commonjs": "10.1.0",
+        "rollup-plugin-eslint": "7.0.0",
+        "rollup-plugin-node-resolve": "5.2.0",
+        "rollup-plugin-peer-deps-external": "2.2.0",
+        "rollup-plugin-typescript2": "0.24.2",
+        "semantic-release": "15.13.24",
+        "sonarqube-scanner": "2.5.0",
+        "temp-dir": "2.0.0",
+        "ts-jest": "24.1.0",
+        "typescript": "3.6.3"
+    },
+    "dependencies": {
+        "debug": "^4.1.1"
+    }
+}
