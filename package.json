@@ -71,6 +71,6 @@
         "typescript": "3.6.3"
     },
     "dependencies": {
-        "debug": "^4.1.1"
+        "debug": "4.1.1"
     }
 }
