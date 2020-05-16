@@ -10,34 +10,38 @@ notifications:
     on_failure: always
     on_success: change
 stages:
-- name: test
-- name: analysis
-- name: build
-- name: release
-  if: branch = master AND type != pull_request
+  - name: test
+  - name: analysis
+  - name: build
+  - name: e2e
+  - name: release
+    if: branch = master AND type != pull_request
 jobs:
   include:
-  - stage: test
-    script: npm test -- --maxWorkers=4
-    name: test
-  - script: npm run lint
-    name: lint
-  - stage: analysis
-    script: npm test -- --coverage --maxWorkers=4 && npm run lint -- -f json -o reports/eslint.json && npx gulp sonar
-    name: sonar
-    addons:
-      sonarcloud:
-        organization: flowscripter
-        token: "$SONAR_TOKEN"
-  - stage: build
-    script: npm run build
-    name: build
-  - stage: release
-    script: npm run build
-    deploy:
-      - provider: script
-        skip_cleanup: true
-        script: npx semantic-release
+    - stage: test
+      script: npm test -- --maxWorkers=4
+      name: test
+    - script: npm run lint
+      name: lint
+    - stage: analysis
+      script: npm test -- --coverage --maxWorkers=4 && npm run lint -- -f json -o reports/eslint.json && npx gulp sonar
+      name: sonar
+      addons:
+        sonarcloud:
+          organization: flowscripter
+          token: "$SONAR_TOKEN"
+    - stage: build
+      script: npm run build
+      name: build
+    - stage: e2e
+      script: npm run build && npm run e2e -- --maxWorkers=4
+      name: e2e
+    - stage: release
+      script: npm run build && npm run e2e -- --maxWorkers=4 && touch dist/.nojekyll
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: npx semantic-release
 cache:
   npm: true
   directories:
