@@ -1,6 +1,5 @@
 import cleanup from 'rollup-plugin-cleanup';
 import commonjs from 'rollup-plugin-commonjs';
-import { eslint } from 'rollup-plugin-eslint';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
@@ -26,24 +25,29 @@ module.exports = [
             'os',
             'path',
             'tty',
-            'util'
+            'util',
+            'buffer',
+            'string_decoder',
+            'readline',
+            'assert',
+            'events',
+            'stream',
+            'http',
+            'https',
+            'url',
+            'zlib',
+            'constants',
+            'readable-stream'
         ],
         plugins: [
             peerDepsExternal(),
-            eslint({
-                include: [
-                    'src/**/*.ts'
-                ]
-            }),
             typescript({
                 typescript: ts,
                 useTsconfigDeclarationDir: true,
                 cacheRoot: `${tempDir}/.rpt2_cache`
             }),
             commonjs(),
-            resolve({
-                preferBuiltins: true
-            }),
+            resolve(),
             cleanup({
                 extensions: ['ts']
             })

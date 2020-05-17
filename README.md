@@ -7,16 +7,9 @@
 
 > Flowscripter CLI.
 
-## Overview
-
-## Further Details
-
-Further details on project configuration files and Javascript version support can be found in 
-the [template for this project](https://github.com/flowscripter/ts-template/blob/master/README.md#overview).
-
 ## Development
 
-Firstly: 
+Firstly:
 
 ```
 npm install
@@ -31,6 +24,37 @@ Watch: `npm run watch`
 Test: `npm test`
 
 Lint: `npm run lint`
+
+E2E test: `npm run e2e`
+
+## Run with Node
+
+#### Running From Source
+
+After building, the CLI can be run with:
+
+    ./bin/flowscripter
+
+To run with debug logging:
+
+    DEBUG=* NODE_NO_WARNINGS=1 ./bin/flowscripter
+
+#### Simulated Installation
+
+To simulate installation:
+
+    sudo npm link
+    flowscripter
+
+#### Installation via NPM
+
+    npm install -g @flowscripter/cli
+    flowscripter
+
+## Further Details
+
+Further details on project configuration files and Javascript version support can be found in
+the [template for this project](https://github.com/flowscripter/ts-template/blob/master/README.md#overview).
 
 ## License
 

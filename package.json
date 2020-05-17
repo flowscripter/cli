@@ -38,6 +38,7 @@
         "build": "npx rollup -c",
         "watch": "npx rollup -c --watch",
         "test": "npx jest",
+        "e2e": "npx jest --config=jest.e2e.config.js",
         "lint": "npx eslint ./src/**/*.ts ./test/**/*.ts"
     },
     "devDependencies": {
@@ -50,17 +51,19 @@
         "@types/jest": "25.2.2",
         "@typescript-eslint/eslint-plugin": "2.33.0",
         "@typescript-eslint/parser": "2.33.0",
+        "babel-plugin-transform-dynamic-import": "2.1.0",
+        "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
         "eslint": "7.0.0",
         "eslint-plugin-import": "2.20.2",
         "eslint-plugin-jest": "23.13.1",
         "gulp": "4.0.2",
         "husky": "4.2.5",
         "jest": "26.0.1",
+        "nixt": "0.5.1",
         "rimraf": "3.0.2",
         "rollup": "2.10.2",
         "rollup-plugin-cleanup": "3.1.1",
         "rollup-plugin-commonjs": "10.1.0",
-        "rollup-plugin-eslint": "7.0.0",
         "rollup-plugin-node-resolve": "5.2.0",
         "rollup-plugin-peer-deps-external": "2.2.2",
         "rollup-plugin-typescript2": "0.27.1",
@@ -71,6 +74,6 @@
         "typescript": "3.9.2"
     },
     "dependencies": {
-        "debug": "4.1.1"
+        "@flowscripter/cli-framework": "5.1.1"
     }
 }

@@ -6,7 +6,8 @@
         "baseUrl": "src"
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "e2e/types/*.d.ts"
     ],
     "exclude": [
         "node_modules"
