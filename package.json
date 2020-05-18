@@ -74,6 +74,6 @@
         "typescript": "3.9.2"
     },
     "dependencies": {
-        "@flowscripter/cli-framework": "5.1.2"
+        "@flowscripter/cli-framework": "5.1.3"
     }
 }
