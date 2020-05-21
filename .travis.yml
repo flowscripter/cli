@@ -1,5 +1,8 @@
 language: node_js
 node_js: '12.11.1'
+os:
+  - linux
+  - osx
 branches:
   only:
   - master
@@ -35,7 +38,13 @@ jobs:
       name: build
     - stage: e2e
       script: npm run build && npm run e2e -- --maxWorkers=4
-      name: e2e
+      name: e2e linux
+    - script: npm run build && npm run e2e -- --maxWorkers=4
+      os: osx
+      name: e2e osx
+    - script: npm run build && npm run e2e -- --maxWorkers=4
+      os: windows
+      name: e2e windows
     - stage: release
       script: npm run build && npm run e2e -- --maxWorkers=4 && touch dist/.nojekyll
       deploy:
