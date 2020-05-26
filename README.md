@@ -35,15 +35,17 @@ E2E test: `npm run e2e`
 
 ## Run with Node
 
+**NOTE**: End-to-end testing is only performed on MacOS and Linux (not Windows).
+
 #### Running From Source
 
 After building, the CLI can be run with:
 
-    ./bin/flowscripter
+    bin/flowscripter
 
 To run with debug logging:
 
-    DEBUG=* NODE_NO_WARNINGS=1 ./bin/flowscripter
+    DEBUG=* NODE_NO_WARNINGS=1 bin/flowscripter
 
 #### Simulated Installation
 
