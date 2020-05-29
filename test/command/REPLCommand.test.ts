@@ -79,8 +79,7 @@ describe('REPLCommand test', () => {
         const testCLI = getTestCLI();
         await testCLI.execute(['repl', '--location', '/history']);
 
-        expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foo 1.2.3'));
-        expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foobar'));
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
     });
 
     test('REPLCommand non-existent history file', async () => {
