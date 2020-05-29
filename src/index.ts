@@ -1,4 +1,5 @@
 import { NodeCLI, PLUGIN_REGISTRY_SERVICE } from '@flowscripter/cli-framework';
+import CLICommandFactory from './CLICommandFactory';
 
 (async (): Promise<void> => {
 
@@ -9,6 +10,7 @@ import { NodeCLI, PLUGIN_REGISTRY_SERVICE } from '@flowscripter/cli-framework';
         moduleScope: '@flowscripter'
     });
 
-    const nodeCli: NodeCLI = new NodeCLI('flowscripter', serviceConfigs, new Map());
-    await nodeCli.execute();
+    const nodeCLI: NodeCLI = new NodeCLI('flowscripter', serviceConfigs, new Map());
+    nodeCLI.addCommandFactory(new CLICommandFactory());
+    await nodeCLI.execute();
 })();

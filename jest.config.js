@@ -5,10 +5,10 @@ module.exports = {
     ],
     testEnvironment: 'node',
     testMatch: [
-        '**/test/?(*.)test.ts'
+        '**/test/**/?(*.)test.ts'
     ],
     transform: {
-        '\\.ts$': 'ts-jest'
+        '\\.(j|t)s$': 'ts-jest'
     },
     transformIgnorePatterns: [
         'node_modules/(?!(@flowscripter)/)'
