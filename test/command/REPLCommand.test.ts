@@ -1,13 +1,15 @@
+import mockFs from 'mock-fs';
 import {
     BaseCLI,
     Command,
     CommandFactory,
     STDOUT_PRINTER_SERVICE
 } from '@flowscripter/cli-framework';
-import { mockProcessStdout } from 'jest-mock-process';
+import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
 import mockProcessStdIn from 'mock-stdin';
 import REPLCommand from '../../src/command/REPLCommand';
 
+const mockStderr = mockProcessStderr();
 const mockStdout = mockProcessStdout();
 const mockStdIn = mockProcessStdIn.stdin();
 
@@ -60,5 +62,77 @@ describe('REPLCommand test', () => {
 
         expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foo 1.2.3'));
         expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foobar'));
+    });
+
+    test('REPLCommand failure with invalid history location', async () => {
+        mockFs({
+            '/history': {
+                foo: 'bar'
+            }
+        });
+
+        process.nextTick(() => {
+            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
+            mockStdIn.send('.exit\r');
+        });
+
+        const testCLI = getTestCLI();
+        await testCLI.execute(['repl', '--location', '/history']);
+
+        expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foo 1.2.3'));
+        expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foobar'));
+    });
+
+    test('REPLCommand non-existent history file', async () => {
+        mockFs({
+            '/history': ''
+        });
+
+        process.nextTick(() => {
+            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
+            mockStdIn.send('.exit\r');
+        });
+
+        const testCLI = getTestCLI();
+        await testCLI.execute(['repl', '--location', '/foo']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not visible!'));
+    });
+
+    test('REPLCommand history file is directory', async () => {
+        mockFs({
+            '/history': {
+                foo: 'bar'
+            }
+        });
+
+        process.nextTick(() => {
+            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
+            mockStdIn.send('.exit\r');
+        });
+
+        const testCLI = getTestCLI();
+        await testCLI.execute(['repl', '--location', '/history']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
+    });
+
+    test('REPLCommand non-writable history file', async () => {
+        mockFs({
+            '/history': mockFs.file({
+                mode: 0o1000,
+                content: ''
+            })
+        });
+
+        process.nextTick(() => {
+            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
+            mockStdIn.send('.exit\r');
+        });
+
+        const testCLI = getTestCLI();
+        await testCLI.execute(['repl', '--location', '/history']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not writable!'));
     });
 });

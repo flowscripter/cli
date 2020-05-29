@@ -6,6 +6,7 @@
 
 import debug from 'debug';
 import os from 'os';
+import fs from 'fs';
 import repl from 'repl';
 import {
     CommandArgs,
@@ -60,6 +61,23 @@ export default class REPLCommand implements SubCommand {
         const historyLocation = commandArgs.location as string;
         this.log(`Using REPL history at: ${historyLocation}`);
 
+        try {
+            fs.accessSync(historyLocation, fs.constants.F_OK);
+        } catch (err) {
+            throw new Error(`REPL history: ${historyLocation} doesn't exist or not visible!`);
+        }
+
+        try {
+            fs.accessSync(historyLocation, fs.constants.W_OK);
+        } catch (err) {
+            throw new Error(`REPL history: ${historyLocation} is not writable!`);
+        }
+
+        const stat = fs.statSync(historyLocation);
+        if (stat.isDirectory()) {
+            throw new Error(`REPL history: ${historyLocation} is a directory!`);
+        }
+
         printer.info(`${printer.blue(context.cliConfig.name)} ${printer.blue(context.cliConfig.version)}\n`);
         printer.info(printer.dim('Type ".help" for more information.\n'));
 
@@ -81,20 +99,6 @@ export default class REPLCommand implements SubCommand {
                 this.log('Received "close" event from repl, resolving');
                 resolve();
             });
-            // replServer.on('exit', () => {
-            //     this.log('Received "exit" event from repl, resolving');
-            //     // @ts-ignore _flushing is not defined on type
-            //     if (replServer._flushing) {
-            //         this.log('History flushing, pausing first');
-            //         replServer.pause();
-            //         replServer.once('flushHistory', () => {
-            //             this.log('Flushing completed, resolving');
-            //             resolve();
-            //         });
-            //     } else {
-            //         resolve();
-            //     }
-            // });
             // @ts-ignore setupHistory is not defined on type
             replServer.setupHistory(historyLocation, (err) => {
                 if (err) {

@@ -61,6 +61,18 @@ describe('ScriptCommand test', () => {
         expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('4'));
     });
 
+    test('ScriptCommand return null', async () => {
+        mockFs({
+            '/script.js': 'return null;'
+        });
+
+        const testCLI = getTestCLI();
+
+        await testCLI.execute(['script', '/script.js']);
+
+        expect(mockStdout).toHaveBeenCalledTimes(0);
+    });
+
     test('ScriptCommand error', async () => {
         mockFs({
             '/script.js': 'throw new Error(\'foo\');'
@@ -71,5 +83,46 @@ describe('ScriptCommand test', () => {
         await testCLI.execute(['script', '/script.js']);
 
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('foo'));
+    });
+
+    test('ScriptCommand non-existent script file', async () => {
+        mockFs({
+            '/script.js': 'throw new Error(\'foo\');'
+        });
+
+        const testCLI = getTestCLI();
+
+        await testCLI.execute(['script', '/foo.js']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not visible!'));
+    });
+
+    test('ScriptCommand script file is directory', async () => {
+        mockFs({
+            '/script.js': {
+                foo: 'throw new Error(\'foo\');'
+            }
+        });
+
+        const testCLI = getTestCLI();
+
+        await testCLI.execute(['script', '/script.js']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
+    });
+
+    test('ScriptCommand non-readable script file', async () => {
+        mockFs({
+            '/script.js': mockFs.file({
+                mode: 0o1000,
+                content: 'throw new Error(\'foo\');'
+            })
+        });
+
+        const testCLI = getTestCLI();
+
+        await testCLI.execute(['script', '/script.js']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not readable!'));
     });
 });
