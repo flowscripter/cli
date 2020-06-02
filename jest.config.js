@@ -23,7 +23,6 @@ module.exports = {
         'src/**/*.ts'
     ],
     coverageDirectory: 'reports',
-    setupFiles: ['./jest.env.js'],
     globals: {
         'ts-jest': {
             babelConfig: {
