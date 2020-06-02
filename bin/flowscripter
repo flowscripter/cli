@@ -1,13 +1,17 @@
 #!/usr/bin/env sh
 
-SOURCE="${BASH_SOURCE[0]}"
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-  SOURCE="$(readlink "$SOURCE")"
-  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-cd $DIR
+self=$(
+    self=${0}
+    while [ -L "${self}" ]
+    do
+        cd "${self%/*}" || exit
+        self=$(readlink "${self}")
+    done
+    cd "${self%/*}" || exit
+    pwd -P
+)
+
+cd "$self" || exit
 cd ..
 
 NODE_NO_WARNINGS=1 node --experimental-modules --experimental-repl-await ./dist/node.js "$@"
