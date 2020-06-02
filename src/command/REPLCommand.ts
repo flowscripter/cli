@@ -64,7 +64,13 @@ export default class REPLCommand implements SubCommand {
         try {
             fs.accessSync(historyLocation, fs.constants.F_OK);
         } catch (err) {
-            throw new Error(`REPL history: ${historyLocation} doesn't exist or not visible!`);
+            this.log(`Location doesn't exist or not visible, attempting to create: ${historyLocation}`);
+            try {
+                fs.openSync(historyLocation, 'a');
+                fs.accessSync(historyLocation, fs.constants.F_OK);
+            } catch (err2) {
+                throw new Error(`Unable to create REPL history location: ${historyLocation} : ${err2.message}`);
+            }
         }
 
         try {

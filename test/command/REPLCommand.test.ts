@@ -1,3 +1,4 @@
+import fs from 'fs';
 import mockFs from 'mock-fs';
 import {
     BaseCLI,
@@ -51,6 +52,7 @@ describe('REPLCommand test', () => {
     });
 
     test('REPLCommand run', async () => {
+        mockFs({});
 
         process.nextTick(() => {
             mockStdIn.send('await Promise.resolve(\'foobar\')\r');
@@ -82,10 +84,8 @@ describe('REPLCommand test', () => {
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
     });
 
-    test('REPLCommand non-existent history file', async () => {
-        mockFs({
-            '/history': ''
-        });
+    test('REPLCommand non-existent history file is created', async () => {
+        mockFs({});
 
         process.nextTick(() => {
             mockStdIn.send('await Promise.resolve(\'foobar\')\r');
@@ -95,7 +95,25 @@ describe('REPLCommand test', () => {
         const testCLI = getTestCLI();
         await testCLI.execute(['repl', '--location', '/foo']);
 
-        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not visible!'));
+        expect(fs.statSync('/foo').isFile()).toBeTruthy();
+    });
+
+    test('Error when REPLCommand non-existent history file cannot be created', async () => {
+        mockFs({
+            '/foo': mockFs.directory({
+                mode: 0
+            })
+        });
+
+        process.nextTick(() => {
+            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
+            mockStdIn.send('.exit\r');
+        });
+
+        const testCLI = getTestCLI();
+        await testCLI.execute(['repl', '--location', '/foo/bar']);
+
+        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('Unable to create'));
     });
 
     test('REPLCommand history file is directory', async () => {
@@ -119,7 +137,7 @@ describe('REPLCommand test', () => {
     test('REPLCommand non-writable history file', async () => {
         mockFs({
             '/history': mockFs.file({
-                mode: 0o1000,
+                mode: 0,
                 content: ''
             })
         });
