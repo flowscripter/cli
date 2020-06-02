@@ -1,7 +1,7 @@
 {
     "name": "@flowscripter/cli",
     "version": "0.0.0",
-    "description": "Flowscripter CLI.",
+    "description": "Flowscripter CLI",
     "repository": {
         "type": "git",
         "url": "https://github.com/flowscripter/cli"

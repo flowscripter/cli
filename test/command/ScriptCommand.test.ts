@@ -1,11 +1,11 @@
+import mockFs from 'mock-fs';
+import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
 import {
     BaseCLI,
     Command,
     CommandFactory,
     STDOUT_PRINTER_SERVICE
 } from '@flowscripter/cli-framework';
-import mockFs from 'mock-fs';
-import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
 import ScriptCommand from '../../src/command/ScriptCommand';
 
 const mockStdout = mockProcessStdout();
@@ -39,10 +39,14 @@ describe('ScriptCommand test', () => {
 
     beforeEach(() => {
         mockStdout.mockReset();
+        mockStderr.mockReset();
+        mockFs.restore();
     });
 
     afterAll(() => {
         mockStdout.mockRestore();
+        mockStderr.mockRestore();
+        mockFs.restore();
     });
 
     test('ScriptCommand is instantiable', () => {

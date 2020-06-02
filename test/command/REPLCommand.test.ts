@@ -1,5 +1,7 @@
-import fs from 'fs';
 import mockFs from 'mock-fs';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import {
     BaseCLI,
     Command,
@@ -41,10 +43,14 @@ describe('REPLCommand test', () => {
 
     beforeEach(() => {
         mockStdout.mockReset();
+        mockStderr.mockReset();
+        mockFs.restore();
     });
 
     afterAll(() => {
         mockStdout.mockRestore();
+        mockStderr.mockRestore();
+        mockFs.restore();
     });
 
     test('REPLCommand is instantiable', () => {
@@ -52,7 +58,9 @@ describe('REPLCommand test', () => {
     });
 
     test('REPLCommand run', async () => {
-        mockFs({});
+        mockFs({
+            [path.join(os.homedir(), '.flowscripter_history')]: ''
+        });
 
         process.nextTick(() => {
             mockStdIn.send('await Promise.resolve(\'foobar\')\r');
@@ -73,18 +81,13 @@ describe('REPLCommand test', () => {
             }
         });
 
-        process.nextTick(() => {
-            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
-            mockStdIn.send('.exit\r');
-        });
-
         const testCLI = getTestCLI();
         await testCLI.execute(['repl', '--location', '/history']);
 
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
     });
 
-    test('REPLCommand non-existent history file is created', async () => {
+    test('REPLCommand non-existent custom history file is created', async () => {
         mockFs({});
 
         process.nextTick(() => {
@@ -98,12 +101,13 @@ describe('REPLCommand test', () => {
         expect(fs.statSync('/foo').isFile()).toBeTruthy();
     });
 
-    test('Error when REPLCommand non-existent history file cannot be created', async () => {
+    test('REPLCommand non-existent default history file is created', async () => {
         mockFs({
-            '/foo': mockFs.directory({
-                mode: 0
-            })
+            [path.join(os.homedir(), '.flowscripter_history')]: ''
         });
+
+        fs.unlinkSync(path.join(os.homedir(), '.flowscripter_history'));
+        expect(fs.existsSync(path.join(os.homedir(), '.flowscripter_history'))).toBeFalsy();
 
         process.nextTick(() => {
             mockStdIn.send('await Promise.resolve(\'foobar\')\r');
@@ -111,9 +115,9 @@ describe('REPLCommand test', () => {
         });
 
         const testCLI = getTestCLI();
-        await testCLI.execute(['repl', '--location', '/foo/bar']);
+        await testCLI.execute(['repl']);
 
-        expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('Unable to create'));
+        expect(fs.statSync(path.join(os.homedir(), '.flowscripter_history')).isFile()).toBeTruthy();
     });
 
     test('REPLCommand history file is directory', async () => {
@@ -121,11 +125,6 @@ describe('REPLCommand test', () => {
             '/history': {
                 foo: 'bar'
             }
-        });
-
-        process.nextTick(() => {
-            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
-            mockStdIn.send('.exit\r');
         });
 
         const testCLI = getTestCLI();
@@ -140,11 +139,6 @@ describe('REPLCommand test', () => {
                 mode: 0,
                 content: ''
             })
-        });
-
-        process.nextTick(() => {
-            mockStdIn.send('await Promise.resolve(\'foobar\')\r');
-            mockStdIn.send('.exit\r');
         });
 
         const testCLI = getTestCLI();

@@ -6,6 +6,7 @@
 
 import debug from 'debug';
 import os from 'os';
+import path from 'path';
 import fs from 'fs';
 import repl from 'repl';
 import {
@@ -33,7 +34,7 @@ export default class REPLCommand implements SubCommand {
     readonly options = [{
         name: 'location',
         description: 'The location of the history file',
-        defaultValue: `${os.homedir()}/.flowscripter_history`,
+        defaultValue: path.join(os.homedir(), '.flowscripter_history'),
         isOptional: false
     }];
 
@@ -84,8 +85,8 @@ export default class REPLCommand implements SubCommand {
             throw new Error(`REPL history: ${historyLocation} is a directory!`);
         }
 
-        printer.info(`${printer.blue(context.cliConfig.name)} ${printer.blue(context.cliConfig.version)}\n`);
-        printer.info(printer.dim('Type ".help" for more information.\n'));
+        printer.info(`\n${printer.blue(context.cliConfig.name)} ${printer.blue(context.cliConfig.version)}\n`);
+        printer.info(printer.dim('Type ".help" for more information.\n\n'));
 
         return new Promise((resolve, reject) => {
 
