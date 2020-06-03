@@ -37,7 +37,9 @@ module.exports = [
             'url',
             'zlib',
             'constants',
-            'readable-stream'
+            'readable-stream',
+            'repl',
+            'vm'
         ],
         plugins: [
             peerDepsExternal(),

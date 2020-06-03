@@ -1,3 +1,17 @@
 #!/usr/bin/env sh
 
-NODE_NO_WARNINGS=1 node --experimental-modules ./dist/node.js "$@"
+self=$(
+    self=${0}
+    while [ -L "${self}" ]
+    do
+        cd "${self%/*}" || exit
+        self=$(readlink "${self}")
+    done
+    cd "${self%/*}" || exit
+    pwd -P
+)
+
+cd "$self" || exit
+cd ..
+
+NODE_NO_WARNINGS=1 node --experimental-modules --experimental-repl-await ./dist/node.js "$@"
