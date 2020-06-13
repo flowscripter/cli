@@ -82,7 +82,7 @@
         "typescript": "3.9.5"
     },
     "dependencies": {
-        "@flowscripter/cli-framework": "5.2.4",
+        "@flowscripter/cli-framework": "5.2.5",
         "debug": "4.1.1",
         "lodash": "4.17.15"
     }
