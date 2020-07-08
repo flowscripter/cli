@@ -84,6 +84,6 @@
     "dependencies": {
         "@flowscripter/cli-framework": "5.3.0",
         "debug": "4.1.1",
-        "lodash": "4.17.16"
+        "lodash": "4.17.17"
     }
 }
