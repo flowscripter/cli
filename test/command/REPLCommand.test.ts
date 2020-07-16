@@ -4,9 +4,10 @@ import os from 'os';
 import path from 'path';
 import {
     BaseCLI,
-    Command,
-    CommandFactory,
-    STDOUT_PRINTER_SERVICE
+    StdoutPrinterService,
+    StderrPrinterService,
+    STDOUT_PRINTER_SERVICE,
+    PrompterService
 } from '@flowscripter/cli-framework';
 import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
 import mockProcessStdIn from 'mock-stdin';
@@ -17,26 +18,22 @@ const mockStdout = mockProcessStdout();
 const mockStdIn = mockProcessStdIn.stdin();
 
 function getTestCLI(): BaseCLI {
+
     const serviceConfigs = new Map();
     serviceConfigs.set(STDOUT_PRINTER_SERVICE, { colorEnabled: false });
 
-    const baseCLI: BaseCLI = new BaseCLI({
+    return new BaseCLI({
         name: 'foo',
         description: 'foo bar',
         version: '1.2.3',
         stdout: process.stdout,
         stderr: process.stderr,
         stdin: process.stdin
-    }, serviceConfigs, new Map());
-
-    baseCLI.addCommandFactory(new class implements CommandFactory {
-        // eslint-disable-next-line class-methods-use-this
-        getCommands(): Iterable<Command> {
-            return [new REPLCommand()];
-        }
-    }());
-
-    return baseCLI;
+    }, [
+        new PrompterService(90),
+        new StdoutPrinterService(90),
+        new StderrPrinterService(90)
+    ], [new REPLCommand()], serviceConfigs, new Map());
 }
 
 describe('REPLCommand test', () => {
