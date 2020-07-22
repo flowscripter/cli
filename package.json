@@ -31,7 +31,7 @@
     ],
     "types": "dist/types/index.d.ts",
     "engines": {
-        "node": "12.18.2"
+        "node": "12.18.3"
     },
     "bin": {
         "flowscripter": "./bin/flowscripter"
