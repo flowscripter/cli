@@ -40,7 +40,7 @@
         "prebuild": "npx rimraf dist",
         "build": "npx rollup -c",
         "watch": "npx rollup -c --watch",
-        "test": "npx jest",
+        "test": "npx --node-arg='--experimental-repl-await' jest",
         "e2e": "npx jest --config=jest.e2e.config.json",
         "lint": "npx eslint ./src/**/*.ts ./test/**/*.ts"
     },
