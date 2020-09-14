@@ -2,42 +2,14 @@ import mockFs from 'mock-fs';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import {
-    BaseCLI,
-    Command,
-    CommandFactory,
-    STDOUT_PRINTER_SERVICE
-} from '@flowscripter/cli-framework';
-import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
+import { mockProcessStderr, mockProcessStdout } from 'jest-mock-process';
 import mockProcessStdIn from 'mock-stdin';
+import { getTestCLI } from '../fixtures/TestCLI';
 import REPLCommand from '../../src/command/REPLCommand';
 
 const mockStderr = mockProcessStderr();
 const mockStdout = mockProcessStdout();
 const mockStdIn = mockProcessStdIn.stdin();
-
-function getTestCLI(): BaseCLI {
-    const serviceConfigs = new Map();
-    serviceConfigs.set(STDOUT_PRINTER_SERVICE, { colorEnabled: false });
-
-    const baseCLI: BaseCLI = new BaseCLI({
-        name: 'foo',
-        description: 'foo bar',
-        version: '1.2.3',
-        stdout: process.stdout,
-        stderr: process.stderr,
-        stdin: process.stdin
-    }, serviceConfigs, new Map());
-
-    baseCLI.addCommandFactory(new class implements CommandFactory {
-        // eslint-disable-next-line class-methods-use-this
-        getCommands(): Iterable<Command> {
-            return [new REPLCommand()];
-        }
-    }());
-
-    return baseCLI;
-}
 
 describe('REPLCommand test', () => {
 
@@ -67,7 +39,7 @@ describe('REPLCommand test', () => {
             mockStdIn.send('.exit\r');
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl']);
 
         expect(mockStdout).toHaveBeenCalledWith(expect.stringContaining('foo 1.2.3'));
@@ -81,7 +53,7 @@ describe('REPLCommand test', () => {
             }
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl', '--location', '/history']);
 
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
@@ -95,7 +67,7 @@ describe('REPLCommand test', () => {
             mockStdIn.send('.exit\r');
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl', '--location', '/foo']);
 
         expect(fs.statSync('/foo').isFile()).toBeTruthy();
@@ -114,7 +86,7 @@ describe('REPLCommand test', () => {
             mockStdIn.send('.exit\r');
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl']);
 
         expect(fs.statSync(path.join(os.homedir(), '.flowscripter_history')).isFile()).toBeTruthy();
@@ -127,7 +99,7 @@ describe('REPLCommand test', () => {
             }
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl', '--location', '/history']);
 
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('is a directory!'));
@@ -141,7 +113,7 @@ describe('REPLCommand test', () => {
             })
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new REPLCommand());
         await testCLI.execute(['repl', '--location', '/history']);
 
         expect(mockStderr).toHaveBeenCalledWith(expect.stringContaining('not writable!'));

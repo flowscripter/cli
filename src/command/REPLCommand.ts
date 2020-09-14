@@ -95,8 +95,7 @@ export default class REPLCommand implements SubCommand {
                 output: printer.writable,
                 input: prompter.readable,
                 useColors: printer.colorEnabled,
-                ignoreUndefined: true,
-                breakEvalOnSigint: true
+                ignoreUndefined: true
             });
             replServer.on('error', (err) => {
                 this.log('Received "error" event from repl, rejecting');

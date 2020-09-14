@@ -1,39 +1,10 @@
 import mockFs from 'mock-fs';
-import { mockProcessStdout, mockProcessStderr } from 'jest-mock-process';
-import {
-    BaseCLI,
-    Command,
-    CommandFactory,
-    STDOUT_PRINTER_SERVICE
-} from '@flowscripter/cli-framework';
+import { mockProcessStderr, mockProcessStdout } from 'jest-mock-process';
+import { getTestCLI } from '../fixtures/TestCLI';
 import ScriptCommand from '../../src/command/ScriptCommand';
 
 const mockStdout = mockProcessStdout();
 const mockStderr = mockProcessStderr();
-
-function getTestCLI(): BaseCLI {
-
-    const serviceConfigs = new Map();
-    serviceConfigs.set(STDOUT_PRINTER_SERVICE, { colorEnabled: false });
-
-    const baseCLI: BaseCLI = new BaseCLI({
-        name: 'foo',
-        description: 'foo bar',
-        version: '1.2.3',
-        stdout: process.stdout,
-        stderr: process.stderr,
-        stdin: process.stdin
-    }, serviceConfigs, new Map());
-
-    baseCLI.addCommandFactory(new class implements CommandFactory {
-        // eslint-disable-next-line class-methods-use-this
-        getCommands(): Iterable<Command> {
-            return [new ScriptCommand()];
-        }
-    }());
-
-    return baseCLI;
-}
 
 describe('ScriptCommand test', () => {
 
@@ -58,7 +29,7 @@ describe('ScriptCommand test', () => {
             '/script.js': 'const num = 2 + 2;num;'
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/script.js']);
 
@@ -70,7 +41,7 @@ describe('ScriptCommand test', () => {
             '/script.js': 'return null;'
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/script.js']);
 
@@ -82,7 +53,7 @@ describe('ScriptCommand test', () => {
             '/script.js': 'throw new Error(\'foo\');'
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/script.js']);
 
@@ -94,7 +65,7 @@ describe('ScriptCommand test', () => {
             '/script.js': 'throw new Error(\'foo\');'
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/foo.js']);
 
@@ -108,7 +79,7 @@ describe('ScriptCommand test', () => {
             }
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/script.js']);
 
@@ -123,7 +94,7 @@ describe('ScriptCommand test', () => {
             })
         });
 
-        const testCLI = getTestCLI();
+        const testCLI = getTestCLI(new ScriptCommand());
 
         await testCLI.execute(['script', '/script.js']);
 
