@@ -59,7 +59,7 @@
         "babel-plugin-transform-dynamic-import": "2.1.0",
         "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
         "eslint": "7.10.0",
-        "eslint-plugin-import": "2.22.0",
+        "eslint-plugin-import": "2.22.1",
         "eslint-plugin-jest": "23.20.0",
         "gulp": "4.0.2",
         "husky": "4.3.0",
