@@ -73,7 +73,7 @@
         "rollup-plugin-cleanup": "3.2.1",
         "rollup-plugin-commonjs": "10.1.0",
         "rollup-plugin-node-resolve": "5.2.0",
-        "rollup-plugin-peer-deps-external": "2.2.3",
+        "rollup-plugin-peer-deps-external": "2.2.4",
         "rollup-plugin-typescript2": "0.28.0",
         "semantic-release": "17.2.1",
         "sonarqube-scanner": "2.7.0",
