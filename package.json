@@ -5,8 +5,8 @@
   "keywords": [
     "bun",
     "cli",
-    "flowscripter",
-    "executable"
+    "executable",
+    "flowscripter"
   ],
   "homepage": "https://github.com/flowscripter/cli#readme",
   "license": "MIT",
