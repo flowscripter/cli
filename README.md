@@ -1,68 +1,81 @@
 # cli
-[![license](https://img.shields.io/github/license/flowscripter/cli.svg)](https://github.com/flowscripter/cli/blob/master/LICENSE)
-[![dependencies](https://img.shields.io/david/flowscripter/cli.svg)](https://david-dm.org/flowscripter/cli)
-[![travis](https://api.travis-ci.com/flowscripter/cli.svg)](https://travis-ci.com/flowscripter/cli)
-[![coverage](https://sonarcloud.io/api/project_badges/measure?project=flowscripter_cli&metric=coverage)](https://sonarcloud.io/dashboard?id=flowscripter_cli)
-[![npm](https://img.shields.io/npm/v/@flowscripter/cli.svg)](https://www.npmjs.com/package/@flowscripter/cli)
 
-> Flowscripter CLI.
+[![version](https://img.shields.io/github/v/release/flowscripter/cli?sort=semver)](https://github.com/flowscripter/cli/releases)
+[![build](https://img.shields.io/github/actions/workflow/status/flowscripter/cli/release-bun-executable.yml)](https://github.com/flowscripter/cli/actions/workflows/release-bun-executable.yml)
+[![coverage](https://codecov.io/gh/flowscripter/cli/graph/badge.svg?token=dxU2NQB2DM)](https://codecov.io/gh/flowscripter/cli)
+[![license: MIT](https://img.shields.io/github/license/flowscripter/cli)](https://github.com/flowscripter/cli/blob/main/LICENSE)
 
-## Overview
+> Flowscripter command line interface
 
-This project provides a CLI for the Flowscripter system.
+> Work in progress.
 
-**This is a work in progress**
+## Binary Executable Usage
+
+**NOTE**: The binaries are 10's of megabytes in size as the entire Bun runtime
+is included.
+
+#### MacOS
+
+Via [Homebrew](https://brew.sh/):
+
+`brew install flowscripter/tap/cli`
+
+#### Linux
+
+In a terminal:
+
+`curl -fsSL https://raw.githubusercontent.com/flowscripter/cli/main/script/install.sh | sh`
+
+#### Windows
+
+Via [Winget](https://github.com/microsoft/winget-cli):
+
+`winget install Flowscripter.cli`
+
+Windows arm64 and x64 builds are supported.
+
+#### Manual Install
+
+You can download and extract the binary zip files from the
+[releases](https://github.com/flowscripter/cli/releases)
+page.
 
 ## Development
 
-Firstly:
+Install dependencies:
 
+`bun install`
+
+Test:
+
+`bun test`
+
+Run:
+
+`bun run index.ts`
+
+Compile binary:
+
+`bun build index.ts --compile --outfile /tmp/cli`
+
+Format:
+
+`bunx oxfmt`
+
+Lint:
+
+`bunx oxlint index.ts src/ tests/`
+
+## Documentation
+
+### Overview
+
+Sample mermaid diagram to test rendering in markdown:
+
+```mermaid
+classDiagram
+    Foo <|-- Bar
 ```
-npm install
-```
-
-then:
-
-Build: `npm run build`
-
-Watch: `npm run watch`
-
-Test: `npm test`
-
-Lint: `npm run lint`
-
-E2E test: `npm run e2e`
-
-## Run with Node
-
-**NOTE**: End-to-end testing is only performed on MacOS and Linux (not Windows).
-
-#### Running From Source
-
-After building, the CLI can be run with:
-
-    bin/flowscripter
-
-To run with debug logging:
-
-    DEBUG=* NODE_NO_WARNINGS=1 bin/flowscripter
-
-#### Simulated Installation
-
-To simulate installation:
-
-    sudo npm link
-    flowscripter
-
-#### Installation via NPM
-
-    npm install -g @flowscripter/cli
-    flowscripter
-
-## Further Details
-
-Further details on project configuration files and Javascript version support can be found in
-the [template for this project](https://github.com/flowscripter/ts-template/blob/master/README.md#overview).
 
 ## License
 
